@@ -1,4 +1,13 @@
-
+ {
+ // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCrMfAJaz1vug4rV7_7a0muV8NRBwy-NME",
+    authDomain: "west-voting-football.firebaseapp.com",
+    databaseURL: "https://west-voting-football.firebaseio.com",
+    storageBucket: "west-voting-football.appspot.com",
+    messagingSenderId: "71850084430"
+  };
+  firebase.initializeApp(config);
 
 document
   .querySelectorAll('.choice button')
@@ -65,7 +74,7 @@ function onVote(event){
   // submit the vote
 }
 
-
+} // Close script in brackets to make es6 variables non global
 
 // Notes
 
