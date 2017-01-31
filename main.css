@@ -15,3 +15,8 @@
   max-width: 90%;
   display: block;
 }
+
+
+.hidden {
+  display: none;
+}

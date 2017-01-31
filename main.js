@@ -1,80 +1,70 @@
  {
- // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyCrMfAJaz1vug4rV7_7a0muV8NRBwy-NME",
-    authDomain: "west-voting-football.firebaseapp.com",
-    databaseURL: "https://west-voting-football.firebaseio.com",
-    storageBucket: "west-voting-football.appspot.com",
-    messagingSenderId: "71850084430"
-  };
-  firebase.initializeApp(config);
+   // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyCrMfAJaz1vug4rV7_7a0muV8NRBwy-NME",
+      authDomain: "west-voting-football.firebaseapp.com",
+      databaseURL: "https://west-voting-football.firebaseio.com",
+      storageBucket: "west-voting-football.appspot.com",
+      messagingSenderId: "71850084430"
+    };
+    firebase.initializeApp(config);
 
-document
-  .querySelectorAll('.choice button')
-  .forEach(btn => btn.addEventListener('click', onVote))
+  document
+    .querySelectorAll('.choice button')
+    .forEach(btn => btn.addEventListener('click', onVote))
 
 
-function onVote(event){
-  console.log("onVote button clicked")
+  function onVote(event){
+    console.log("onVote button clicked")
 
-  //submit the vote
-  // // what button i clicked on
-  console.log(event.target.dataset.value)
-  const voteFor = event.target.closest('.choice').dataset.value
-  const url = 'https://west-voting-football.firebaseio.com/votes.json'
+    //submit the vote
+    // // what button i clicked on
+    // console.log(event.target.dataset.value)
+    const voteFor = event.target.closest('.choice').dataset.value
+    const url = 'https://west-voting-football.firebaseio.com/votes.json'
 
-  // // go get the current counts
 
-  // can use fetch to get images or videos - doesn't return all data
-  // returns when first chunk of data returns
-  // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
-  fetch(url)
-    // .json() belongs to fetch - return data as a json file
-    .then(response => response.json())
-    // this second .then only fires when the entire data is loaded in the first .then
-    // use .catch() if data.json() doesnt return valid json
-    .then(data => {
-      console.log(data)
-      // patch new count
+    firebase.database().ref('votes').once('value', snap => snap.val() )
 
-      const newCount = data && data[voteFor] ? data[voteFor] + 1 : 1
+      .then(data => {
+        // patch new count
 
-      return fetch(url, {
-        method: 'PATCH',
-        body: JSON.stringify({ [voteFor]: newCount})
-      })
-      .then(()=>{
-        document.querySelectorAll('h3').forEach(choice => {
-          // reduce first arg - previous value - second arg next value
-          const total = Object.values(data).reduce((acc, val) => acc + val)
-          const current = data[choice.closest('.choice').dataset.value]
-          choice.innerText = Math.round(current / total * 100) + "%"
-        })
+        const newCount = data && data[voteFor] ? data[voteFor] + 1 : 1
+
+        return firebase.database().ref('votes').update({[voteFor]: newCount})
       })
 
-    })
-
-    // show vote totals
-
-    .catch(console.error)
+      .catch(console.error)
 
 
 
-  // hide buttons
+    // hide buttons
 
-  document.querySelectorAll('button').forEach(btn => btn.remove())
+    document.querySelectorAll('button').forEach(btn => btn.remove())
+    document.querySelectorAll('.hidden').forEach(item => item.classList.remove('hidden'))
 
-
-
-  // show current vote totals
-
+  } // clone onVote function
 
 
+  firebase.database().ref('votes').on('value', onUpdate)
 
-  // submit the vote
-}
+  function onUpdate (snap) {
+    const data = snap.val()
+
+    document.querySelectorAll('h3').forEach(choice => {
+            // reduce first arg - previous value - second arg next value
+            const total = Object.values(data).reduce((acc, val) => acc + val)
+            const current = data[choice.closest('.choice').dataset.value]
+            choice.innerText = Math.round(current / total * 100) + "%"
+          })
+  }
+
+
 
 } // Close script in brackets to make es6 variables non global
+
+
+
 
 // Notes
 
