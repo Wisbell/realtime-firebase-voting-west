@@ -1,0 +1,17 @@
+/*.football-image {
+  width: 300px;
+  height: 300px;
+}
+*/
+
+.choice {
+  width: 45%;
+  float: left;
+}
+
+.choice img {
+  /*width: 300px;
+  height: 300px;*/
+  max-width: 90%;
+  display: block;
+}

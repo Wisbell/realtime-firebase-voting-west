@@ -1,0 +1,20 @@
+{
+  "name": "realtime-firebase-voting-west",
+  "homepage": "https://github.com/Wisbell/realtime-firebase-voting-west",
+  "authors": [
+    "Wisbell <westleyisbell@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "firebase": "^3.6.7"
+  }
+}
