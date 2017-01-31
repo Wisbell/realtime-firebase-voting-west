@@ -1,5 +1,8 @@
-document.querySelector('.choice_a button').addEventListener('click', onVote)
-document.querySelector('.choice_b button').addEventListener('click', onVote)
+
+
+document
+  .querySelectorAll('.choice button')
+  .forEach(btn => btn.addEventListener('click', onVote))
 
 
 function onVote(event){
@@ -8,7 +11,7 @@ function onVote(event){
   //submit the vote
   // // what button i clicked on
   console.log(event.target.dataset.value)
-  const voteFor = event.target.dataset.value
+  const voteFor = event.target.closest('.choice').dataset.value
   const url = 'https://west-voting-football.firebaseio.com/votes.json'
 
   // // go get the current counts
@@ -16,7 +19,7 @@ function onVote(event){
   // can use fetch to get images or videos - doesn't return all data
   // returns when first chunk of data returns
   // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
-  fetch('https://west-voting-football.firebaseio.com/votes.json')
+  fetch(url)
     // .json() belongs to fetch - return data as a json file
     .then(response => response.json())
     // this second .then only fires when the entire data is loaded in the first .then
@@ -27,12 +30,23 @@ function onVote(event){
 
       const newCount = data && data[voteFor] ? data[voteFor] + 1 : 1
 
-      fetch(url, {
+      return fetch(url, {
         method: 'PATCH',
         body: JSON.stringify({ [voteFor]: newCount})
       })
+      .then(()=>{
+        document.querySelectorAll('h3').forEach(choice => {
+          // reduce first arg - previous value - second arg next value
+          const total = Object.values(data).reduce((acc, val) => acc + val)
+          const current = data[choice.closest('.choice').dataset.value]
+          choice.innerText = Math.round(current / total * 100) + "%"
+        })
+      })
 
     })
+
+    // show vote totals
+
     .catch(console.error)
 
 
@@ -44,6 +58,7 @@ function onVote(event){
 
 
   // show current vote totals
+
 
 
 
@@ -63,3 +78,15 @@ function onVote(event){
     /* Can use data-whatever to store data https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes
       maybe store unique identifiers for delete buttons
     */
+
+
+// REMEMBER THESE
+
+  // forEach - return is undefined
+
+  // // take each item and do something with it
+  // map - return is the array mangled ['apples', 'banana'] = > ['APPLE', 'BANANA']
+
+  // filter - returns the array with possible fewer items
+
+  // reduce - take array and reduces it down to a single value
