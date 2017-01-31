@@ -25,23 +25,13 @@ function onVote(event){
       console.log(data)
       // patch new count
 
-      if (data && data[voteFor]){
-        // next voter
-        fetch(url, {
-          method: 'PATCH',
-          body: JSON.stringify({[voteFor]: 1})
-        })
-      } else {
-        // first voter
-        /*
-          let obj = {}
-          obj[voteFor] = 1
-        */
-        fetch(url, {
-          method: 'PATCH',
-          body: JSON.stringify({[voteFor]: 1})
-        })
-      }
+      const newCount = data && data[voteFor] ? data[voteFor] + 1 : 1
+
+      fetch(url, {
+        method: 'PATCH',
+        body: JSON.stringify({ [voteFor]: newCount})
+      })
+
     })
     .catch(console.error)
 
