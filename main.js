@@ -17,6 +17,7 @@
   function onVote (evt) {
     // submit the vote
     const voteURL = 'https://west-voting-football.firebaseio.com/votes.json'
+    // const messageUrl = 'https://west-voting-football.firebaseio.com/messages.json'
 
     // // what button i clicked on
     const voteFor = evt.target.closest('.choice').dataset.value
@@ -37,7 +38,27 @@
 
   firebase.database().ref('votes').on('value', onUpdate)
 
-  function onUpdate (snap) {
+  const onNewMessage = (event) => {
+    event.preventDefault()
+
+    let name = document.querySelector('input[placeholder="name"]').value
+    console.log(name)
+
+    let message = document.querySelector('input[placeholder="message"]').value
+    console.log(message)
+
+    let newMessage = {
+                      "name": name,
+                      "message": message
+                    }
+
+    console.log(newMessage)
+
+    // firebase.database().ref('messages').once('value').update(url, JSON.stringify(newMessage))
+    firebase.database().ref('messages').update(newMessage)
+  }
+
+  function onUpdate (snap){
     const data = snap.val()
 
     document.querySelectorAll('h3').forEach(choice => {
@@ -46,6 +67,10 @@
       choice.innerText = Math.round(current / total * 100) + "%"
     })
   }
+
+  document.querySelector('form').addEventListener('submit', onNewMessage)
+
+
 }
 
 
